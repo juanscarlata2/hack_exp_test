@@ -1,0 +1,19 @@
+Para explotar el ejemplo de deserialización insegura que proporcioné anteriormente, un atacante podría enviar una petición POST con un archivo JSON malicioso que contenga código malicioso incrustado.
+
+Por ejemplo, el atacante podría enviar el siguiente archivo JSON:
+
+Este archivo JSON malicioso se aprovecha de una debilidad común en la deserialización insegura llamada "type confusion" o confusión de tipo. El atacante establece el valor de la propiedad __type en el tipo System.Diagnostics.Process, que es una clase de .NET Framework que se utiliza para iniciar procesos del sistema.
+
+Cuando se deserializa el archivo JSON malicioso utilizando la clase JavaScriptSerializer, el código malicioso incrustado en el archivo JSON se ejecutará automáticamente en el servidor. En este caso, el código malicioso ejecutará el programa cmd.exe y creará un archivo llamado test.txt en la ruta C:\temp\ con el contenido hello.
+
+Por lo tanto, es importante siempre validar y filtrar cualquier entrada de usuario que pueda ser deserializada, y utilizar bibliotecas de deserialización seguras que eviten la confusión de tipos y otras vulnerabilidades comunes de deserialización insegura.
+
+Exploit 
+
+{
+  "__type": "System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+  "StartInfo": {
+    "FileName": "cmd.exe",
+    "Arguments": "/c echo hello > C:\\temp\\test.txt"
+  }
+}
